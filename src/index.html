@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../src/styles.scss?version=<%= Common.GetVersion%>"  >
+    
+    <!-- Bootstrap for css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+   
+  <script src="../src/main.js" type="text/javascript"></script>
+    <script type="module" src="../src/main.js"></script> 
+
+   
+    <title  class="d-flex justify-content-center" >Picking Scan</title>
+</head>
+<body >
+
+<h1 style="margin-bottom: 0rem">Picking Scan</h1>
+
+<div class=" w-100" >
+  <p style=" text-align: center; margin-bottom:0rem; color: #ed2939; display:none; align-items: center; " name="warn"  ></p>
+</div>
+
+<div class=" w-100">
+  <p style="background-color: #FFFAF0; text-align: center; margin-bottom:0.5rem ;"> - Customer Info - </p>
+ </div>
+
+<div>
+  <div class="container">
+    <div class="">      
+      <span class="text" style="background-color:transparent; border:none" id="CustomerCode" >
+        <label>CustCode :&nbsp;</label>
+        <input list="codelist" id="customer" onclick="hideList()" oninput="showList(this)" size="12"/>
+      </span>
+    </div>
+
+    <label class="text" style="background-color:transparent; border:none" >CustName : </label>
+    <label style="background-color:transparent; border:none;font-weight: normal;" id ="name"></label>
+    <div class="">
+      <span class="text" style="background-color:transparent; border:none"id="">
+        <label class=" col-md"  >Branch :&nbsp;</label>
+        <select class="col-md " style="padding: 1px 2px" id="branch" length="8" >
+        <option selected ></option>
+        </select>
+      </span>       
+    </div>
+    <div class="d-flex flex-row-reverse text" >
+    <span>
+    <button    class="button" id = "custconfirm" onclick="custconfirm()">Confirm</button>
+    <button class="button" id= "custedit" onclick="custedit()">Edit</button>
+    </span>
+    </div>
+</div>
+
+   
+ <div class="col-md-12 w-100">
+  <p style="background-color: #FFFAF0; text-align: center ; margin-bottom:0.5rem"> - Order Info - </p>
+ </div>
+
+
+<div class="container">
+  
+<div class="text" style="background-color:transparent; border:none; margin-bottom:0.5rem; margin:1rem "id="">
+  
+  <label class=" col-md"  >Scan Code :&nbsp;</label>
+  <input   id="scanspace" size="14" inputmode="none"></input ><button  id="clear">✘</button>
+</div>
+  <div class="text" style="background-color:transparent; border:none; ; margin:1rem"id="">
+  <label class=" col-md"  >Type Code :&nbsp;</label>
+  <input   id="typespace" size="14" inputmode="text"></input ><button  style="background-color: #f8f9fa; border-color:#c6c7c8;  "id="typecode" onclick="typecode()">✓</button> 
+  </div>
+</div>
+
+
+
+
+<div  class="container" style=" text-align: center; vertical-align: center;padding: 0px;" > 
+  <table id ="table"  style="width:100% ;vertical-align: center; margin-top: 10px; "  class="table table-striped">
+    <tr >
+      <th style="width:35%; border-width:1px;padding: 2px 0px; vertical-align: center; ">AttributeCode</th>     
+      <th style="width:30%;border-width:1px; padding: 2px 0px; vertical-align: center">Picked</th>
+      <th style="width:15%; border-width:1px; padding: 2px 0px; vertical-align: center">Order</th>
+      <th style="width:10%; border-width:1px; padding: 2px 0px; vertical-align: center">Stc</th>
+      <th style="width:12%; border-bottom:1px solid black; padding: 2px 0px; vertical-align: center"></th>
+    </tr>
+  
+  </table>
+</div>
+
+
+
+<div class=" w-100">
+  <p style="background-color: #FFFAF0; text-align: center; margin-bottom:0.5rem ;"> - Deliver Type - </p>
+</div>
+
+<div class = "container">
+<div class="row justify-content-center" style="margin: 1rem 0rem 1rem 0rem;" >
+  <p class="col-3" ></p>
+  <input class="col-1" type="radio" id="post" name="deliver" >
+  <label class="col-1" style="padding:0rem;" for="post" >Post</label>
+  <p class="col-2" ></p>
+  <input class="col-1"type="radio" id="collect" name="deliver" >
+  <label class="col-1" style="padding:0rem;" for="collect">Collect</label>
+  <p class="col-3" ></p>
+</div>
+
+
+<div class="" style="margin: 2rem 0rem 2rem 0rem";>      
+  <span class="text" style="background-color:transparent; border:none" id="CustomerCode" >
+    <label>Created by :&nbsp;</label>
+    <input  id="createby"   size="12"/>
+  </span>
+</div>
+
+<div class=" w-100" >
+  <p style=" text-align: center; margin-bottom:0rem; color: #ed2939; display:none; align-items: center; " name="warn"  ></p>
+</div>
+
+<div class="d-flex text" >
+  <span class="col-9">
+  <button class="button " id="new"  onclick="reload()">New</button>
+  </span>
+  <span  class="col-3 ">
+  <button class="button"  id="print" style="background-color: #c6c7c8; display:none" onclick="print_badge()" disabled >Print</button>
+  <button class="button" id="submit" onclick="LoadOrderNum(submit)" >Submit</button>
+  <br><span>
+</div>
+
+
+
+
+
+
+<!----------------------------------------------------- Script------------------------------------------------------------->
+
+<script>
+  const ip_address = '172.16.0.191:8080';
+  var customerData =[]; //customername
+  var stockData =[]; //customername
+  var scanNum = 0; //for adding table row by scan and set cell id
+  LoadCustomer();
+  //var editNum = 0; //editNume == 0 means this is not edit mode
+  var custinput = document.getElementById("customer");
+  var branchinput = document.getElementById("branch");
+  var createby = document.getElementById("createby");
+  
+
+  
+
+  
+  //LoadCustomer=====================To Load customercode and save it to customerdata======================================
+  async function LoadCustomer(){
+  const jsoncustomer = await fetch(`http://${ip_address}/customer.php`,{method:'GET', mode: 'cors',headers: {
+      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },})
+  .then((response) => response.json())
+  .then((data) => { 
+      
+    customerData= data;
+    let text = `<datalist id="hiddenlist" name = "codelist">`;
+    for (let i in data) {
+      text += `<option value= ${data[i].CustomerCode} >` + data[i].CustomerCode + "</option>";
+    }
+    text += "</datalist>"
+    document.getElementById("customer").innerHTML = text;
+  
+      
+  })
+  .catch(function (err) {
+    console.log(err);
+  }); 
+  }
+
+  //To hide customercode datalist when user click to input by change datalist id
+  function hideList() {
+  var datalist = document.querySelector('[name="codelist"]');
+      datalist.id = "hiddenlist";
+  }
+
+  //To show customercode list when user input code by change datalist id
+  function showList(input) {
+  var datalist = document.querySelector('[name="codelist"]');
+  if (input.value) 
+      datalist.id = "codelist";    		
+  else 
+      datalist.id = "hiddenlist";
+  }
+
+
+
+//LoadCustBranch=================To Load customercode and save it to customerdata=========================================
+  async function LoadCustBranch(custcode){
+  const jsoncustomerbranch = await   fetch(`http://${ip_address}/customerbranch.php`,{
+        method:'POST', mode: 'cors', 
+        headers: 
+        {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json; charset=utf-8',
+       
+        },
+         body: JSON.stringify({"code":custcode}),
+  })
+  .then((response) => response.json())
+  .then((data) => { 
+
+    //customerData= data;
+    console.log(`how many branch: ${data.length}`);
+    let text;
+    for (let i in data) {
+      text += `<option value= ${data[i].BranchCode} >` + data[i].BranchCode + "</option>";
+    }   
+    document.getElementById("branch").innerHTML = text;        
+  })
+  .catch((error)=>{
+    console.error(error);
+    });	 
+  }
+
+
+
+
+
+
+
+  //Display_Name_Branch==================Display Customer name and Branch when user finished typing=========================
+  var typingTimer;                //timer identifier
+  var doneTypingInterval = 1000;  //time in ms, 2 seconds for example
+
+  
+  //when key up reach time interval, (1)display customer name (2)load and display branch option 
+  custinput.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(Display_Name_Branch, doneTypingInterval);
+  });
+
+  custinput.addEventListener('keydown', () => {
+    clearTimeout(typingTimer);
+  });
+
+  //user is "finished typing," show customer name and branch option
+  function Display_Name_Branch() {
+    
+    //display customer name
+    for (var i = 0; i < customerData.length; i++)
+    {
+      if (customerData[i].CustomerCode == custinput.value)
+      {
+        console.log(`find the index= ${i}`);
+        
+        let name = customerData[i].CustomerName;
+        document.getElementById("name").innerHTML = name;
+        break;
+      }
+      else
+      console.log("can't find anything.");
+    }
+
+    //Call customer Branch function to display branch option
+    LoadCustBranch(custinput.value);
+
+  }
+
+  
+  //customer name function
+  var testlist = document.querySelector('[name="codelist"]');
+  var input = document.getElementById("customer");
+  input.addEventListener('input', (event) => {
+    for (var i = 0; i < customerData.length; i++)
+    {
+      if (customerData[i].CustomerCode == input.value)
+      {
+        console.log(`find the index= ${i}`);
+        break;
+      }
+      console.log("can't find anything.");
+    }
+
+
+  });
+
+  
+  //Confirm and Edit customerinfo
+  function custconfirm(){
+    if(customer.value=="")
+    {           
+      const warn = document.querySelectorAll('[name="warn"]')[0];
+      warn.innerHTML = "Please enter customercode";
+      warn.style.display='';
+      customer.focus();
+      setTimeout(hide, 10000);        
+    }
+    else{
+    document.getElementById("customer").disabled = true;
+    document.getElementById("branch").disabled = true;
+    }
+  }
+  function custedit(){
+    document.getElementById("customer").disabled = false;
+    document.getElementById("branch").disabled = false;
+  }
+  
+
+  //Scan function==========================Create table for scanning input =========================================
+/*
+  //Scan Button function
+  document.getElementById("scan").addEventListener("click", () => {
+    document.getElementById("scanspace").value="";
+    document.getElementById("scanspace").focus();
+  });
+*/
+    //console.log(table.rows[1].cell1);
+    //console.log(table.rows[2].cell1);
+    //var y = document.getElementById("table").rows[0].cells[1].innerHTML;
+    //console.log(y);
+
+    var table = document.getElementById("table");
+  //Scan Button function
+    document.getElementById("clear").addEventListener("click", () => {
+    document.getElementById("scanspace").value="";
+    clearTimeout(ScanTimer);
+    document.getElementById("scanspace").focus();
+    
+  });
+
+  //set Timer for Scan function
+  var ScanTimer;                //timer identifier
+  var doneScanInterval = 1000; 
+  var scaninput = document.getElementById("scanspace");
+  var typeinput = document.getElementById("typespace");
+  
+  
+  //when key up reach time interval, call ItemCodeScaned to create table and insert data
+  scaninput.addEventListener('keyup', () => {
+    clearTimeout(ScanTimer);
+    ScanTimer = setTimeout(LoadItemStock.bind(null,scaninput.value), doneScanInterval);
+  });
+
+  scaninput.addEventListener('keydown', () => {
+    clearTimeout(ScanTimer);
+  });
+
+  //scaninput color
+  scaninput.addEventListener('input', function () {
+    scaninput.style.backgroundColor='aquamarine';
+});
+
+ 
+  function typecode(){
+    //scaninput.value = typeinput.value;
+    LoadItemStock(typeinput.value);
+    //typeinput.value ="";
+  }
+
+  
+function ItemCodeScaned() {
+console.log(scaninput.value);
+//if scaninput is not empty and the item code is found in database
+if(scaninput.value || typeinput.value)
+{
+  scanNum=scanNum+1; 
+  var row = table.insertRow(1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+  var cell5 = row.insertCell(4);
+  var cell6 = row.insertCell(5);
+  var cell7 = row.insertCell(6);
+  var cell8 = row.insertCell(7);
+  var cell9 = row.insertCell(8);
+  var cell10 = row.insertCell(9);
+
+  cell1.id = `attributecode${scanNum}`;
+  cell4.id = `stock${scanNum}`;
+  cell7.id = `dep${scanNum}`; //to store item department, not shown in the table
+  cell8.id = `out${scanNum}`; //to store out of stock, not shown in the table, 0/1, 0 is default, 1 is out of stock
+  cell9.id = `pktime${scanNum}`;
+  cell10.id = `minqty${scanNum}`;
+
+  cell2.innerHTML = `<button class="pickedleft" style="background-color:transparent; border:none; margin:0px 2px ; padding:0px" id="addpick${scanNum}" onclick ="reducepick('${scanNum}')" ><img style="height:26px; width:26px; " src="../src/minus10003.png" /></button>
+  <input type="number" style="text-align: center; width: 2.2rem; margin-right:2px" id="input${scanNum}" value ="1" oninput ="orderpiece('${scanNum}')" onchange="scaninput.focus()"  /><button class="pickedright" style=" margin-left:3px ; padding:0px ;" id="addpick${scanNum}" onclick ="addpick('${scanNum}')" ><img style="height:26px; width:26px; " src="../src/add10002.png" /></button>`;
+  cell3.innerHTML = `<input type="number" style="text-align: center; width: 2.2rem; margin-right:2px" id="order${scanNum}" value ="1" onchange="scaninput.focus()" />`;
+  //cell4.innerHTML = `<button class="outstock" id="stockBtn${scanNum}" onclick ="outofstock('${scanNum}')" style=" text-align: center;"></button>`;
+  cell5.innerHTML = `<button id="deleteItem${scanNum}" onclick ="deleteItem(${scanNum})" style="background-color:transparent; border:none;  " ><img style="height:30px; width:30px;" src="../src/delete10001.png" /></button>`;
+  cell6.innerHTML = `${scanNum}`;
+  cell9.innerHTML = pktime();
+  
+
+  //create table first then add data in
+  cell1.style = "text-align: left; padding: 5px 0px; vertical-align: center";
+  cell2.style=" padding: 5px 0px; vertical-align: center";
+  cell3.style=" padding: 5px 0px; vertical-align: center";
+  cell4.style="padding: 5px 0px; vertical-align: center";
+  cell5.style=" padding: 5px 0px; vertical-align: center";
+  cell6.style="display: none;"
+  cell7.style="display: none;"
+  cell8.style="display: none;"
+  cell9.style="display: none;"
+  cell10.style="display: none;"
+
+  console.log("scan num=",scanNum); 
+
+
+  
+  }
+}
+
+//add picking number by button
+function addpick(i){
+  const minqty = Number(document.getElementById(`minqty${i}`).innerHTML);
+  var inputpc = Number(document.getElementById(`input${i}`).value);
+  var orderpc = Number(document.getElementById(`order${i}`).value);
+  
+  if (minqty > 1)
+  {
+  document.getElementById(`input${i}`).value = inputpc + minqty;
+  document.getElementById(`order${i}`).value = inputpc + minqty ;
+  //console.table(listAllEventListeners());
+  }
+  else
+  {
+  document.getElementById(`input${i}`).value ++  ;
+  document.getElementById(`order${i}`).value = inputpc + 1 ;
+  }
+  scaninput.focus();
+}
+//reduce picking number by button
+function reducepick(i){
+  
+  if (document.getElementById(`input${i}`).value > 0)
+  {
+    const minqty = Number(document.getElementById(`minqty${i}`).innerHTML);
+    var inputpc = Number(document.getElementById(`input${i}`).value);
+    var orderpc = Number(document.getElementById(`order${i}`).value);
+    if (minqty > 1)
+    {
+    document.getElementById(`input${i}`).value = inputpc - minqty;
+    document.getElementById(`order${i}`).value = inputpc - minqty ;
+    //console.table(listAllEventListeners());
+    }
+    else
+    {
+    document.getElementById(`input${i}`).value --  ;
+    document.getElementById(`order${i}`).value = inputpc - 1 ;
+    }
+    scaninput.focus();
+  }
+}
+
+
+
+
+//out of stock function
+function outofstock(i)
+{
+  var outofstock = document.getElementById(`out${i}`);
+  //var stockbtn = document.getElementById(`stockBtn${i}`);
+  if(outofstock.innerHTML == 0)
+  {
+  //stockbtn.style.backgroundColor = '#E74C3C';
+  outofstock.innerHTML = 1;
+  }
+  else if(outofstock.innerHTML == 1)
+  {
+  //stockbtn.style.backgroundColor = '#f8f9fa';
+  outofstock.innerHTML = 0;
+  }
+  
+}
+
+function pktime()
+{
+  var dt= new Date();
+  var mo=dt.getMonth()+1;
+  var d=dt.getDate();
+  var h = dt.getHours();
+  var n = dt.getMinutes();
+  var l = dt.getSeconds();
+  var m=dt.getMilliseconds();
+
+  moo=String(mo);
+
+  if(d<10) dd="0"+String(d);
+  else dd=String(d);
+
+  if(h<10) hh="0"+String(h);
+  else hh=String(h);
+
+  if(n<10) nn="0"+String(n);
+  else nn=String(n);
+
+  if(l<10) ll="0"+String(l);
+  else ll=String(l);
+
+  if(m<10) mm="00"+String(m);
+  else if(m<100 && m>=10) mm="0"+String(m);
+  else mm=String(m);
+
+  var tval=moo+dd+hh+nn+ll+"."+mm;
+  return Number(tval);
+}
+
+function orderpiece (i)
+{
+  var piece = document.getElementById(`input${i}`).value;
+  document.getElementById(`order${i}`).value = piece ;
+ 
+  
+}
+
+
+
+//LoadStock================= load item stock=========================================
+  async function LoadItemStock(s){
+  const itemstock = await fetch(`http://${ip_address}/itemstock.php`,{
+        method:'POST', mode: 'cors', 
+        headers: 
+        {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json; charset=utf-8',       
+        },
+         body: JSON.stringify({"scaninput":s}),
+  })
+  .then((response) => response.json())
+  .then((data) => { 
+   
+    stockData = data; 
+   
+    //Scan the same item
+    var srno = 0;
+    for ( var i = 1; i < table.rows.length ; i++ )
+    {
+    if ( stockData[0].AttributeCode == table.rows[i].cells[0].innerHTML)
+      srno = table.rows[i].cells[5].innerHTML; 
+    }
+
+    //No data input or input is not in database
+    if(scaninput.value == "" && typeinput.value == ""){
+    {
+    alert("Enter itemcode");
+  
+    scaninput.style.backgroundColor='';
+    scaninput.focus();
+    }
+    }
+    else if(data == "not in database")
+    {
+      if(scaninput.value !="")
+      {
+        alert(`Itemcode "${scaninput.value}" is not in database`);
+        scaninput.value = "";
+        scaninput.style.backgroundColor='';
+        scaninput.focus();
+      }
+      
+      else if(typeinput.value !="")
+      alert(`Itemcode "${typeinput.value}" is not in database`);
+    }
+    
+    else if (srno != 0)
+    {
+      addpick(srno);
+      scaninput.value = "";
+      scaninput.style.backgroundColor='';
+      //hide the keyboard again 
+      srno = 0;
+    }
+    
+   
+    else{    
+    console.log("item code:",stockData[0].AttributeCode);  
+    console.log("stock level:",stockData[0].MainStockPC_M);
+    console.log("sold min qty:",stockData[0].SoldMinQty);      
+
+    ItemCodeScaned();
+    //insert data in the table
+    document.getElementById(`attributecode${scanNum}`).innerHTML = stockData[0].AttributeCode;
+    //document.getElementById(`stock${scanNum}`).innerHTML = stockData[0].MainStockPC_M;
+    document.getElementById(`stock${scanNum}`).innerHTML = stockData[0].MainStockPC_M;
+    document.getElementById(`dep${scanNum}`).innerHTML = stockData[0].Dep;
+    document.getElementById(`out${scanNum}`).innerHTML = 0;
+    document.getElementById(`minqty${scanNum}`).innerHTML = stockData[0].SoldMinQty;
+    document.getElementById(`input${scanNum}`).value = stockData[0].SoldMinQty;    
+    document.getElementById(`order${scanNum}`).value = stockData[0].SoldMinQty;       
+    //hide the keyboard again
+    if(stockData[0].MainStockPC_M == 0)
+    {
+    document.getElementById(`input${scanNum}`).value = 0;
+    document.getElementById(`stock${scanNum}`).style.color = '#E74C3C';
+    document.getElementById(`out${i}`).innerHTML = 1;
+    }
+   
+    }
+
+    
+    //clean scan input
+    scaninput.value=""; 
+    scaninput.style.backgroundColor='';
+    typeinput.value=""; 
+    //clean stockdata array
+    stockData.length = 0;
+   
+  })
+  .catch((error)=>{
+    console.error(error);
+    });	 
+  }
+
+  //===================================Order Number=========================================
+
+  //LoadCustBranch=================To Load customercode and save it to customerdata=========================================
+  var OrderNo;
+  //var datetime;
+  var deliver;
+  //LoadOrderNum --> submit --> SubmitDetail --> SubmitHeader;
+
+  async function LoadOrderNum(callback){
+    const jsonordernum = await   fetch(`http://${ip_address}/ordernum.php`,{
+          method:'GET', mode: 'cors', 
+          headers: 
+          {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json; charset=utf-8',
+        
+          },
+         
+    })
+    .then((response) => response.json())
+    .then((data) => { 
+
+      //customerData= data;
+      //-----------------------OrderNo--------------------------
+      // the very first order
+      if (data=="No previous OrderNo") 
+      {
+        const yearNow = (new Date().getFullYear()).toString();
+        OrderNo = "Z" + yearNow.slice(2,4) + "0001";
+      }
+      else
+      {
+      //To import and edit the format of order number
+      console.log(`latest Num: ${data[0].OrderNo}`);
+      const ordernum = JSON.stringify(data[0].OrderNo);
+      const yearorder = ordernum.slice(2, 4);
+   
+      //number function convert string to interger; padstart fill in number to the specified digit
+      const num = (Number(ordernum.slice(4, 8)) + 1).toString().padStart(4, '0') ;      
+      const yearNow = (new Date().getFullYear()).toString();
+      
+      
+      //The first order of a year
+      if( Number(yearNow.slice(2,4)) > Number(yearorder) )
+      { OrderNo = "Z" + yearNow.slice(2,4) + "0001";}
+      //To add a new order the current year
+      else if ( Number(yearNow.slice(2,4)) == Number(yearorder))
+      { OrderNo = "Z" + yearNow.slice(2,4) + num;}
+      }
+      
+
+
+      //-------------------Collect or Post-------------------------
+      if (document.getElementById('post').checked) { deliver = 'P';}
+      else if (document.getElementById('collect').checked) { deliver='C';}
+
+      //-----------------Current Date & Time--------------------
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); //getMonth display 0 for Jan and 11 for Dec.
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var datetime = date+' '+time;
+      
+      const totalRowCount = table.rows.length;
+      console.log(datetime);
+      console.log(`${OrderNo}`);
+      console.log(`total:${totalRowCount}`);
+
+      callback(datetime); // callback submit function
+
+
+    })
+    .catch((error)=>{
+      console.error(error);
+      });	 
+    }
+
+
+  
+  //==============================Add order to online order header and detail ============================================
+  
+  //hide submit data check warning
+  function hide(){
+    //document.getElementById("warn").style.display = 'none';
+    document.querySelectorAll('[name="warn"]')[0].style.display = 'none';
+    document.querySelectorAll('[name="warn"]')[1].style.display = 'none';
+    }
+
+  //function 1 : to call other two functions
+    var itemdept_D = 0; //to count how many item in different department
+    var itemdept_G = 0;
+    var itemdept_S = 0;
+    var itemdept_B = 0;  
+  function submit(datetime){
+
+    const warn = document.querySelectorAll('[name="warn"]')[0];   
+    const warn1 = document.querySelectorAll('[name="warn"]')[1];   
+    
+    for(var i = table.rows.length-1; i > 0 ; i--){
+      var srno = table.rows[i].cells[5].innerHTML;
+      var picked = document.getElementById(`input${srno}`);
+      var quantity = document.getElementById(`order${srno}`); //order quantity
+      if(picked.value =="")
+      {
+        warn1.innerHTML = "Please enter picked quantity"; 
+        warn1.style.display='';
+        picked.focus();
+        setTimeout(hide, 10000);
+        return;
+
+      }
+      if(quantity.value =="")
+      {
+        warn1.innerHTML = "Please enter order quantity"; 
+        warn1.style.display='';
+        quantity.focus();
+        setTimeout(hide, 10000);
+        return;
+      }
+
+    }
+
+
+    if(customer.value=="")
+    {     
+      warn.innerHTML = "Please enter customercode";
+      warn.style.display='';
+      customer.focus();
+      setTimeout(hide, 10000);        
+    }
+    else if (table.rows.length <=1 )
+    {
+      warn1.innerHTML = "Please enter order item";
+      warn1.style.display='';
+      scanspace.focus();
+      setTimeout(hide, 10000);  
+    }
+    else if ( !(document.getElementById('post').checked) && !(document.getElementById('collect').checked))
+    {
+      warn1.innerHTML = "Please select deliver type";    
+      warn1.style.display='';
+      setTimeout(hide, 10000);
+    }   
+    else if ( document.getElementById("createby").value=="") 
+    {
+      warn1.innerHTML = "Please enter your name";
+      warn1.style.display='';    
+      document.getElementById("createby").focus();
+      setTimeout(hide, 10000);
+    }     
+    else {
+    for(var i = table.rows.length-1; i > 0 ; i--)
+    {
+      var attrcode = table.rows[i].cells[0].innerHTML;
+      var srno = table.rows[i].cells[5].innerHTML;
+      var picked = document.getElementById(`input${srno}`).value;
+      var dep = table.rows[i].cells[6].innerHTML;
+      var nostock = table.rows[i].cells[7].innerHTML;
+      var pktime = table.rows[i].cells[8].innerHTML;
+      var quantity = document.getElementById(`order${srno}`).value; //order quantity
+      if ( dep == "D") itemdept_D ++ ;
+      else if ( dep == "G") itemdept_G ++ ;
+      else if ( dep == "S") itemdept_S ++ ;
+      else if ( dep == "B") itemdept_B ++ ;
+
+      if(picked == "" && quantity != "") picked= quantity;
+      if(quantity == "" && picked != "") quantity= picked;
+      
+
+      SubmitDetail(attrcode, OrderNo , picked , i, datetime, dep, quantity,pktime);    
+    }
+      // header is the summary of detail
+      SubmitHeader(custinput.value,branchinput.value, OrderNo, datetime,table.rows.length - 1, itemdept_D, itemdept_G, itemdept_S ,itemdept_B, deliver, createby.value);
+  }
+  }
+
+  // update every item to order deatil
+  async function SubmitDetail(attrcode, ordernum, picked, srnum, datetime, dep, quantity,pktime ){
+  const jsonsubmit = await  fetch(`http://${ip_address}/addDetail.php`,{
+        method:'POST', mode: 'cors', 
+        headers: 
+        {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json; charset=utf-8',
+       
+        },
+         body: JSON.stringify({"attrcode": attrcode,"ordernum": ordernum, "picked": picked, "srnum":srnum, "datetime":datetime, "dep":dep, "quantity":quantity, "pktime":pktime }),
+  })
+  .then((response) => response.json())
+  .then((data) => { 
+
+    if (data == "Submitted")
+    alert(`Submitted, OrderNo: ${ordernum}`);
+    else if ( data == "Submit failed")
+    alert("Submit failed, Try again.");
+
+  })
+  .catch((error)=>{
+    console.error(error);
+    });	 
+  }
+
+
+  // update order summary
+  async function SubmitHeader(custcode,branchcode, ordernum, datetime, items, diamond, gold, silver, box, deliver, createby){
+  const jsonsubmitheader = await  fetch(`http://${ip_address}/addHeader.php`,{
+        method:'POST', mode: 'cors', 
+        headers: 
+        {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json; charset=utf-8',
+       
+        },
+         body: JSON.stringify({"custcode":custcode,"branchcode":branchcode, "ordernum": ordernum,"datetime":datetime, "items":items, "diamond": diamond, "gold":gold, "silver":silver, "box":box, "deliver":deliver,  "createby":createby }),
+  })
+  .then((response) => response.json())
+  .then((data) => { 
+
+    if (data == "Submitted")    
+    {
+      alert("Order Submitted");
+      //if diamond department
+      document.getElementById("submit").disabled = true;
+      document.getElementById("submit").style.display='none';
+      
+      //print button only show for dimond department
+      if(itemdept_D != 0 && itemdept_G == 0 && itemdept_S == 0 && itemdept_B == 0)
+      {
+        document.getElementById("print").style.display='';
+        document.getElementById("print").disabled = false;
+        document.getElementById("print").style.backgroundColor='#f8f9fa';
+
+      }
+      else
+      location.reload();
+    }
+    else if ( data == "Submit failed")
+    alert("Submit failed, Try again.");
+    //let confirmation = confirm("Order Submitted");
+    //if (confirmation) {  
+  
+   //location.reload();
+    
+  //} 
+
+  })
+  .catch((error)=>{
+    console.error(error);
+    });	 
+  }
+
+
+
+  
+
+  //==============================EDIT ORDER ============================================
+
+  /*
+  //EditItem Button
+  var edit_code = document.getElementById("editcode");
+  var edit_pick = document.getElementById("editpick");
+  var edit_stock = document.getElementById("editstock");
+  var rescaninput = document.getElementById("rescanspace");
+  var rescanBtn = document.getElementById("rescan");
+  var confirmBtn = document.getElementById("confirm");
+  var cancelBtn = document.getElementById("cancel");
+  var reducepickBtn = document.getElementById("reducepick");
+  var addpickBtn = document.getElementById("addpick");
+  rescaninput.disabled = true;
+  rescanBtn.disabled = true;
+  edit_pick.disabled = true;
+  confirmBtn.disabled = true;
+  cancelBtn.disabled = true;
+  reducepickBtn.disabled=true;
+  addpickBtn.disabled=true;
+
+  
+
+  function editItem(e){
+  edit_code.innerHTML = document.getElementById(`attributecode${e}`).innerHTML;
+  edit_pick.value = document.getElementById(`input${e}`).value;
+  edit_stock.innerHTML = document.getElementById(`stock${e}`).innerHTML;
+  rescanBtn.disabled = false;
+  edit_pick.disabled = false;
+  confirmBtn.disabled = false;
+  cancelBtn.disabled = false;
+  reducepickBtn.disabled=false;
+  addpickBtn.disabled=false;
+  editNum = e;
+  }
+
+
+  function rescan(){ 
+  rescaninput.value=""; 
+  rescaninput.disabled = false;
+  rescaninput.focus();
+  }
+
+
+  //set Timer for Scan function
+  var RescanTimer;                //timer identifier
+  var doneScanInterval = 1000; 
+  //when key up reach time interval, call ItemCodeScaned to create table and insert data
+  rescaninput.addEventListener('keyup', () => {
+    clearTimeout(RescanTimer);
+    RescanTimer = setTimeout(LoadItemStock.bind(null,rescaninput.value), doneScanInterval);
+    
+  });
+
+  rescaninput.addEventListener('keydown', () => {
+    clearTimeout(RescanTimer);
+  });
+ 
+
+  function confirmEdit(e){
+    document.getElementById(`attributecode${e}`).innerHTML = edit_code.innerHTML;
+    document.getElementById(`input${e}`).value = edit_pick.value;
+    document.getElementById(`stock${e}`).innerHTML = edit_stock.innerHTML;
+    edit_code.innerHTML ="";
+    edit_pick.value ="";
+    edit_pick.disabled = true;
+    edit_stock.innerHTML ="";
+    rescaninput.value="";
+    rescaninput.disabled = true;
+    rescanBtn.disabled = true;
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
+    reducepickBtn.disabled=true;
+    addpickBtn.disabled=true;
+    editNum = 0;
+  }
+
+  function cancel(){
+    edit_code.innerHTML ="";
+    edit_pick.value ="";
+    edit_pick.disable = true;
+    edit_stock.innerHTML ="";
+    rescaninput.value="";
+    rescaninput.disabled = true;
+    rescanBtn.disabled = true;
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
+    reducepickBtn.disabled=true;
+    addpickBtn.disabled=true;
+    editNum = 0;
+  }
+
+*/
+
+
+  //==========================Delete Item========================================
+
+  var deleterow = 0;
+  function deleteItem(e){
+  const totalRowCount = table.rows.length;
+  var item = document.getElementById(`attributecode${e}`).innerHTML; 
+  
+  let confirmation = confirm(`Delete item ${item}?`);
+  if (confirmation) {  
+    
+    for (var i = 1; i < totalRowCount; i++) 
+    {
+      if ( item == table.rows[i].cells[0].innerHTML)
+      {  
+        deleterow = i;
+        break;
+      }
+    }
+      table.deleteRow(i);  
+      alert("Item Deleted"); 
+      deleterow == 0;
+    
+  } 
+
+  }
+
+//Log all EventListeners Function
+  function listAllEventListeners() {
+  const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));
+  allElements.push(document);
+  allElements.push(window);
+
+  const types = [];
+
+  for (let ev in window) {
+    if (/^on/.test(ev)) types[types.length] = ev;
+  }
+
+  let elements = [];
+  for (let i = 0; i < allElements.length; i++) {
+    const currentElement = allElements[i];
+    for (let j = 0; j < types.length; j++) {
+      if (typeof currentElement[types[j]] === 'function') {
+        elements.push({
+          "node": currentElement,
+          "type": types[j],
+          "func": currentElement[types[j]].toString(),
+        });
+      }
+    }
+  }
+
+  return elements.sort(function(a,b) {
+    return a.type.localeCompare(b.type);
+  });
+}
+
+
+//==========================Create new order========================================
+
+function reload(){
+
+  let confirmation = confirm("Create a new order?");
+  if (confirmation) {  
+    
+    location.reload(); 
+  } 
+}
+
+//==========================Print new order========================================
+var ip_addr = "172.16.0.46";
+function print_badge()
+{
+
+	var zpl1;
+	var zpl = "^XA^PW600^LL400^PON^FO50,90^A0N,30,30^FDOrderNo:^FS^FO170,90^A0N,40,40^FD" + OrderNo + "^FS^FO320,90^A0N,30,30^FDCustCode:^FS^FO460,90^A0N,40,40^FD"+ custinput.value +"^FS";
+	    zpl +="^FO70,150^A0N,30,30^FD" + "Product"+ "^FS"; 
+		  zpl +="^FO470,150^A0N,30,30^FD" + "Qty"+ "^FS";
+        
+  var vyShift=210;
+  var outItem=[]; //out of stock item
+  var outItemPicked=[];//out of stcok item picked number
+  //print item with stock first
+  var itemposition;
+  var noritemNum = 0; //normal item number
+  for(var i = 1; i < table.rows.length; i++)
+    {
+      var attrcode = table.rows[i].cells[0].innerHTML;
+      var srno = table.rows[i].cells[5].innerHTML;
+      var picked = document.getElementById(`input${srno}`).value;
+      var nostock = table.rows[i].cells[7].innerHTML;
+      
+      if(picked == 0) //out of stock
+      {
+      outItem.push(attrcode);
+      outItemPicked.push(picked);
+      }
+      else if (picked != 0)
+      {
+      zpl1=vyShift+40*(noritemNum);		
+      zpl +="^FO70,"+zpl1+"^A0N,30,30^FD" + attrcode + "^FS"; 
+      zpl +="^FO480,"+zpl1+"^A0N,30,30^FD" + picked + "^FS"; 
+      itemposition = zpl1;
+      noritemNum++;
+      }      
+    }
+  
+    //gap and out of stock
+    zpl1 = itemposition + 80;
+    zpl +="^FO70,"+zpl1+"^A0N,30,30^FD" + "Out of stock" + "^FS"; 
+    zpl +="^FO480,"+zpl1+"^A0N,30,30^FD" +  + "^FS"; 	
+    //print out of stock item
+  for (var i = 0; i < outItem.length; i++) {
+    vyShift = itemposition + 80;
+    zpl1=vyShift+40*(i+1);    		
+    zpl +="^FO70,"+zpl1+"^A0N,30,30^FD" + outItem[i] + "^FS"; 
+    zpl +="^FO480,"+zpl1+"^A0N,30,30^FD" + outItemPicked[i] + "^FS"; 	
+  }
+    //zebra code: end
+    zpl +="^XZ";
+
+	print_this(zpl, ip_addr);
+  localStorage["PrinterIP"] = ip_addr; 
+}
+
+function print_this(zpl, ip_addr)
+{
+	var url = "http://"+ip_addr+"/pstprnt";
+	var method = "POST";
+	var async = true;
+	var request = new XMLHttpRequest();
+
+	request.onload = function () {
+		var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
+		var data = request.responseText; // Returned data, e.g., an HTML document.
+	}
+
+	request.open(method, url, async);
+	request.setRequestHeader("Content-Length", zpl.length);
+  //request.setRequestHeader('Access-Control-Allow-Headers', '*');
+
+	// Actually sends the request to the server.
+	request.send(zpl);
+}
+
+
+  </script>
+
+<!----------------------------------------------------- Script------------------------------------------------------------->
+
+
+
+
+
+
+<!-- Bootstrap for JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
